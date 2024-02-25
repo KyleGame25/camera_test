@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Stream</title>
+</head>
+<body>
+    <video id="videoElement" autoplay></video>
+
+    <script>
+        // Function to start streaming from the camera
+        async function startCamera() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const backCamera = devices.find(device => device.kind === 'videoinput' && device.label.toLowerCase().includes('back'));
+
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: backCamera ? { exact: backCamera.deviceId } : undefined } });
+                const videoElement = document.getElementById('videoElement');
+                videoElement.srcObject = stream;
+            } catch (err) {
+                console.error('Error accessing camera:', err);
+            }
+        }
+
+        // Call the function to start streaming when the page loads
+        window.onload = startCamera;
+    </script>
+</body>
+</html>
